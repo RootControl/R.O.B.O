@@ -1,7 +1,15 @@
+using Robo.Application.Interfaces;
+using Robo.Application.Services;
+using Robo.Domain.Interfaces;
+using Robo.Infrastructure.Databases;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+builder.Services.AddSingleton<IRobotRepository, InMemoryRobotRepository>();
+builder.Services.AddScoped<IRobotService, RobotService>();
+builder.Services.AddScoped<IMoveRobotHeadService, MoveRobotHeadService>();
+builder.Services.AddScoped<IMoveRobotArmService, MoveRobotArmService>();
+
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
