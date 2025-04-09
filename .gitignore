@@ -1,0 +1,85 @@
+# Rider IDE specific
+.idea/
+*.sln.iml
+*.iws
+*.ipr
+
+# .NET Core / ASP.NET Core
+## Build output
+bin/
+obj/
+*.user
+*.suo
+*.userprefs
+*.cache
+*.bak
+
+# Project-specific build output
+Robo.Solution/*/bin/
+Robo.Solution/*/obj/
+
+# NuGet Packages
+*.nupkg
+packages/
+**/packages/
+*.nuget.props
+*.nuget.targets
+
+# Visual Studio / MSBuild
+*.csproj.DotSettings
+*.csproj.user
+*.suo
+*.cache
+*.docstates
+*.tss
+*.vs/
+*.vscode/
+*.sln.docstates
+
+# Test results
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+# Logs
+*.log
+logs/
+*.log.*
+
+# Dependency directories
+node_modules/
+bower_components/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Documentation
+docs/_build/
+docs/_static/
+docs/_templates/
+
+# Temporary files
+*~
+*.swp
+*.tmp
+*.bak
+
+# Database files
+*.mdf
+*.ldf
+*.sdf
+
+# Published output
+publish/
+wwwroot/publish/
+
+# Rider specific additional ignores
+*.idea/
+resharper-host/
