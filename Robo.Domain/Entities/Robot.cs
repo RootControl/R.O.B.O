@@ -4,25 +4,13 @@ namespace Robo.Domain.Entities;
 
 public class Robot
 {
-    public Head Head { get; set; } = new Head();
-    public Arm LeftArm { get; set; } = new Arm();
-    public Arm RightArm { get; set; } = new Arm();
+    public Head Head { get; private set; } = new Head();
+    public Arm LeftArm { get; private set; } = new Arm();
+    public Arm RightArm { get; private set; } = new Arm();
     
-    public void MoveHead(HeadRotation rotation, HeadTilt tilt)
-    {
-        Head.RotateHead(rotation);
-        Head.TiltHead(tilt);
-    }
-    
-    public void MoveLeftArm(ElbowState elbow, WristState wrist)
-    {
-        LeftArm.MoveElbow(elbow);
-        LeftArm.MoveWrist(wrist);
-    }
-    
-    public void MoveRightArm(ElbowState elbow, WristState wrist)
-    {
-        RightArm.MoveElbow(elbow);
-        RightArm.MoveWrist(wrist);
-    }
+    public void RotateHead(HeadRotation rotation) => Head.RotateHead(rotation);
+    public void TiltHead(HeadTilt tilt) => Head.TiltHead(tilt);
+
+    public void MoveElbow(Arm arm, ElbowState elbow) => arm.MoveElbow(elbow);
+    public void MoveWrist(Arm arm, WristState wrist) => arm.MoveWrist(wrist);
 }

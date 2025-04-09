@@ -4,8 +4,8 @@ namespace Robo.Domain.Entities;
 
 public class Head
 {
-    public HeadRotation Rotation { get; set; } = HeadRotation.Rested;
-    public HeadTilt Tilt { get; set; } = HeadTilt.Rested;
+    public HeadRotation Rotation { get; private set; } = HeadRotation.Rested;
+    public HeadTilt Tilt { get; private set; } = HeadTilt.Rested;
     
     public void RotateHead(HeadRotation newState)
     {

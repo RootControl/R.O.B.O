@@ -4,8 +4,8 @@ namespace Robo.Domain.Entities;
 
 public class Arm
 {
-    public ElbowState Elbow { get; set; } = ElbowState.Rested;
-    public WristState Wrist { get; set; } = WristState.Rested;
+    public ElbowState Elbow { get; private set; } = ElbowState.Rested;
+    public WristState Wrist { get; private set; } = WristState.Rested;
 
     public void MoveElbow(ElbowState newState)
     {
