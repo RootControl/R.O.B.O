@@ -5,5 +5,5 @@ namespace Robo.Application.Interfaces;
 
 public interface IMoveElbow
 {
-    Task MoveElbowAsync(Arm arm, ElbowState newState);
+    Task MoveElbowAsync(ElbowState newState);
 }

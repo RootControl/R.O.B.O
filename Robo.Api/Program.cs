@@ -6,9 +6,6 @@ using Robo.Infrastructure.Databases;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSingleton<IRobotRepository, InMemoryRobotRepository>();
-builder.Services.AddScoped<IRobotService, RobotService>();
-builder.Services.AddScoped<IMoveRobotHeadService, MoveRobotHeadService>();
-builder.Services.AddScoped<IMoveRobotArmService, MoveRobotArmService>();
 
 builder.Services.AddOpenApi();
 

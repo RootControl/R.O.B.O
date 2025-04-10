@@ -26,6 +26,6 @@ public class Head
         Tilt = newState;
     }
     
-    private bool CanRotate(HeadRotation newState) => (int) newState - (int) Rotation <= 1;
-    private bool CanTilt(HeadTilt newState) => (int) newState - (int) Tilt <= 1;
+    private bool CanRotate(HeadRotation newState) => Math.Abs((int) newState - (int) Rotation) <= 1;
+    private bool CanTilt(HeadTilt newState) => Math.Abs((int) newState - (int) Tilt) <= 1;
 }

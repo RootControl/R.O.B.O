@@ -5,21 +5,21 @@ using Robo.Domain.Interfaces;
 
 namespace Robo.Application.Services;
 
-public class MoveRobotArmService(IRobotRepository robotRepository) : IMoveRobotArmService
+public class LeftArmCommandService(IRobotRepository robotRepository) : IArmCommandService<LeftArm>
 {
     private readonly IRobotRepository _robotRepository = robotRepository;
     
-    public async Task MoveElbowAsync(Arm arm, ElbowState newState)
+    public async Task MoveElbowAsync(ElbowState newState)
     {
         var robot = await _robotRepository.GetRobotStateAsync();
-        robot.MoveElbow(arm, newState);
+        robot.LeftArm.MoveElbow(newState);
         await _robotRepository.SaveRobotStateAsync(robot);
     }
 
-    public async Task MoveWristAsync(Arm arm, WristState newState)
+    public async Task MoveWristAsync(WristState newState)
     {
         var robot = await _robotRepository.GetRobotStateAsync();
-        robot.MoveWrist(arm, newState);
+        robot.LeftArm.MoveWrist(newState);
         await _robotRepository.SaveRobotStateAsync(robot);
     }
 }

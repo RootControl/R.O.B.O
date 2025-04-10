@@ -3,8 +3,8 @@ using Robo.Domain.Enums;
 
 namespace Robo.Application.DTOs;
 
-public class ArmStateDto(Arm arm)
+public class ArmStateDto(ArmBase leftArm)
 {
-    public ElbowState Elbow { get; set; } = arm.Elbow;
-    public WristState Wrist { get; set; } = arm.Wrist;
+    public ElbowState Elbow { get; set; } = leftArm.Elbow;
+    public WristState Wrist { get; set; } = leftArm.Wrist;
 }
