@@ -25,7 +25,7 @@ public static class RobotEndpoints
                 IRobotQueryService robotQueryService) =>
         {
             await headCommandService.RotateHeadAsync(command.Rotation);
-            return Results.Ok(robotQueryService.GetRobotStateAsync());
+            return Results.Ok(await robotQueryService.GetRobotStateAsync());
         })
         .WithName("RotateHead")
         .WithDescription("Rotate the head of the robot");
@@ -35,7 +35,7 @@ public static class RobotEndpoints
                 IRobotQueryService robotQueryService) =>
         {
             await headCommandService.TiltHeadAsync(command.Tilt);
-            return Results.Ok(robotQueryService.GetRobotStateAsync());
+            return Results.Ok(await robotQueryService.GetRobotStateAsync());
         })
         .WithName("TiltHead")
         .WithDescription("Tilt the head of the robot");
@@ -45,7 +45,7 @@ public static class RobotEndpoints
             IRobotQueryService robotQueryService) =>
         {
             await leftArmCommandService.MoveElbowAsync(command.Elbow);
-            return Results.Ok(robotQueryService.GetRobotStateAsync());
+            return Results.Ok(await robotQueryService.GetRobotStateAsync());
         })
         .WithName("MoveLeftArmElbow")
         .WithDescription("Move the elbow of the left arm of the robot");
@@ -55,7 +55,7 @@ public static class RobotEndpoints
             IRobotQueryService robotQueryService) =>
         {
             await leftArmCommandService.MoveWristAsync(command.Wrist);
-            return Results.Ok(robotQueryService.GetRobotStateAsync());
+            return Results.Ok(await robotQueryService.GetRobotStateAsync());
         })
         .WithName("MoveLeftArmWrist")
         .WithDescription("Move the wrist of the left arm of the robot");
@@ -65,7 +65,7 @@ public static class RobotEndpoints
             IRobotQueryService robotQueryService) =>
         {
             await rightArmCommandService.MoveElbowAsync(command.Elbow);
-            return Results.Ok(robotQueryService.GetRobotStateAsync());
+            return Results.Ok(await robotQueryService.GetRobotStateAsync());
         })
         .WithName("MoveRightArmElbow")
         .WithDescription("Move the elbow of the right arm of the robot");
@@ -75,7 +75,7 @@ public static class RobotEndpoints
             IRobotQueryService robotQueryService) =>
         {
             await rightArmCommandService.MoveWristAsync(command.Wrist);
-            return Results.Ok(robotQueryService.GetRobotStateAsync());
+            return Results.Ok(await robotQueryService.GetRobotStateAsync());
         })
         .WithName("MoveRightArmWrist")
         .WithDescription("Move the wrist of the right arm of the robot");

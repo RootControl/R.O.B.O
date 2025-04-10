@@ -1,10 +1,92 @@
 ﻿@page
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Robo.Domain.Enums
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "R.O.B.O. Control";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container">
+    <h1>R.O.B.O. Control Interface</h1>
+
+    <!-- Error Message -->
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="error-message">
+            <p>@Model.ErrorMessage</p>
+        </div>
+    }
+
+    <!-- Robot State Display -->
+    <div class="state-section">
+        <h2>Current State</h2>
+        <div class="state-grid">
+            <div class="state-item">
+                <strong>Left Arm</strong>
+                <p>Elbow: @Model.RobotState?.LeftArmState.Elbow</p>
+                <p>Wrist: @Model.RobotState?.LeftArmState.Wrist</p>
+            </div>
+            <div class="state-item">
+                <strong>Head</strong>
+                <p>Rotation: @Model.RobotState?.Head.Rotation</p>
+                <p>Tilt: @Model.RobotState?.Head.Tilt</p>
+            </div>
+            <div class="state-item">
+                <strong>Right Arm</strong>
+                <p>Elbow: @Model.RobotState?.RightArmState.Elbow</p>
+                <p>Wrist: @Model.RobotState?.RightArmState.Wrist</p>
+            </div>
+        </div>
+        <button class="refresh-btn" onclick="location.reload()">Refresh State</button>
+    </div>
+
+    <!-- Control Forms -->
+    <div class="control-section">
+        <h2>Controls</h2>
+
+        <!-- Head Controls -->
+        <div class="control-group">
+            <h3>Head</h3>
+            <form method="post" asp-page-handler="RotateHead">
+                <label>Rotate Head:</label>
+                <select name="rotation" asp-items="Html.GetEnumSelectList<HeadRotation>()"></select>
+                <button type="submit">Rotate</button>
+            </form>
+            <form method="post" asp-page-handler="TiltHead">
+                <label>Tilt Head:</label>
+                <select name="tilt" asp-items="Html.GetEnumSelectList<HeadTilt>()"></select>
+                <button type="submit">Tilt</button>
+            </form>
+        </div>
+
+        <!-- Left Arm Controls -->
+        <div class="control-group">
+            <h3>Left Arm</h3>
+            <form method="post" asp-page-handler="MoveElbow" asp-route-side="left">
+                <label>Elbow:</label>
+                <select name="elbow" asp-items="Html.GetEnumSelectList<ElbowState>()"></select>
+                <button type="submit">Move</button>
+            </form>
+            <form method="post" asp-page-handler="MoveWrist" asp-route-side="left">
+                <label>Wrist:</label>
+                <select name="wrist" asp-items="Html.GetEnumSelectList<WristState>()"></select>
+                <button type="submit">Move</button>
+            </form>
+        </div>
+
+        <!-- Right Arm Controls -->
+        <div class="control-group">
+            <h3>Right Arm</h3>
+            <form method="post" asp-page-handler="MoveElbow" asp-route-side="right">
+                <label>Elbow:</label>
+                <select name="elbow" asp-items="Html.GetEnumSelectList<ElbowState>()"></select>
+                <button type="submit">Move</button>
+            </form>
+            <form method="post" asp-page-handler="MoveWrist" asp-route-side="right">
+                <label>Wrist:</label>
+                <select name="wrist" asp-items="Html.GetEnumSelectList<WristState>()"></select>
+                <button type="submit">Move</button>
+            </form>
+        </div>
+    </div>
 </div>
