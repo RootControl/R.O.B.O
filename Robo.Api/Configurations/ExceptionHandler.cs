@@ -18,7 +18,7 @@ public static class ExceptionHandler
                         context.Response.StatusCode = StatusCodes.Status400BadRequest;
                         await context.Response.WriteAsJsonAsync(new
                         {
-                            error = $"Error: {invalidOperationException.Message}"
+                            error = invalidOperationException.Message
                         });
                         break;
                     default:

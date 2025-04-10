@@ -16,6 +16,8 @@ public class IndexModel(IHttpClientFactory httpClientFactory) : PageModel
     };
 
     public RobotStateDto? RobotState { get; set; }
+    
+    [TempData]
     public string? ErrorMessage { get; set; }
 
     public async Task OnGetAsync()
@@ -37,49 +39,43 @@ public class IndexModel(IHttpClientFactory httpClientFactory) : PageModel
 
     public async Task<IActionResult> OnPostMoveElbowAsync(string side, ElbowState elbow)
     {
-        await SendCommandAsync($"arms/{side}/elbow", new { Elbow = elbow });
+        await SendCommandAsync($"{side}/elbow", new { Elbow = elbow });
         return RedirectToPage();
     }
 
     public async Task<IActionResult> OnPostMoveWristAsync(string side, WristState wrist)
     {
-        await SendCommandAsync($"arms/{side}/wrist", new { Wrist = wrist });
+        await SendCommandAsync($"{side}/wrist", new { Wrist = wrist });
         return RedirectToPage();
     }
 
     private async Task SendQueryAsync(string endpoint = "")
     {
         var client = _httpClientFactory.CreateClient("RobotApi");
-        try
-        {
-            var response = await client.GetAsync(endpoint);
-            response.EnsureSuccessStatusCode();
+        var response = await client.GetAsync(endpoint);
             
-            if (response.IsSuccessStatusCode)
-                RobotState = await response.Content.ReadFromJsonAsync<RobotStateDto>(_jsonOptions);
-        }
-        catch (HttpRequestException ex)
+        if (response.IsSuccessStatusCode)
+            RobotState = await response.Content.ReadFromJsonAsync<RobotStateDto>(_jsonOptions);
+        else
         {
-            ErrorMessage = ex.Message;
+            var error = await response.Content.ReadFromJsonAsync<ErrorDto>();
+            ErrorMessage = error?.Error;
         }
     }
 
     private async Task SendCommandAsync(string endpoint, object requestBody)
     {
         var client = _httpClientFactory.CreateClient("RobotApi");
-        try
-        {
-            var json = JsonSerializer.Serialize(requestBody);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await client.PostAsync(endpoint, content);
-            response.EnsureSuccessStatusCode();
+        var json = JsonSerializer.Serialize(requestBody);
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+        var response = await client.PostAsync(endpoint, content);
             
-            if (response.IsSuccessStatusCode)
-                RobotState = await response.Content.ReadFromJsonAsync<RobotStateDto>(_jsonOptions);
-        }
-        catch (HttpRequestException ex)
+        if (response.IsSuccessStatusCode)
+            RobotState = await response.Content.ReadFromJsonAsync<RobotStateDto>(_jsonOptions);
+        else
         {
-            ErrorMessage = ex.Message;
+            var error = await response.Content.ReadFromJsonAsync<ErrorDto>();
+            ErrorMessage = error?.Error;
         }
     }
 }

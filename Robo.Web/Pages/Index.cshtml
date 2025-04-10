@@ -1,92 +1,129 @@
 ﻿@page
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using Robo.Domain.Enums
+@using Robo.Domain.Utils
 @model IndexModel
 @{
     ViewData["Title"] = "R.O.B.O. Control";
 }
 
-<div class="container">
-    <h1>R.O.B.O. Control Interface</h1>
+<div class="container md-4">
 
-    <!-- Error Message -->
     @if (!string.IsNullOrEmpty(Model.ErrorMessage))
     {
-        <div class="error-message">
-            <p>@Model.ErrorMessage</p>
+        <div class="row">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <p class="text-center">@Model.ErrorMessage</p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
         </div>
     }
 
-    <!-- Robot State Display -->
-    <div class="state-section">
-        <h2>Current State</h2>
-        <div class="state-grid">
-            <div class="state-item">
-                <strong>Left Arm</strong>
-                <p>Elbow: @Model.RobotState?.LeftArmState.Elbow</p>
-                <p>Wrist: @Model.RobotState?.LeftArmState.Wrist</p>
-            </div>
-            <div class="state-item">
-                <strong>Head</strong>
-                <p>Rotation: @Model.RobotState?.Head.Rotation</p>
-                <p>Tilt: @Model.RobotState?.Head.Tilt</p>
-            </div>
-            <div class="state-item">
-                <strong>Right Arm</strong>
-                <p>Elbow: @Model.RobotState?.RightArmState.Elbow</p>
-                <p>Wrist: @Model.RobotState?.RightArmState.Wrist</p>
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">Left Arm</div>
+                <div class="card-body">
+                    <p><strong>Elbow:</strong> <span class="state-left-elbow">@Model.RobotState?.LeftArmState.Elbow.GetDescription()</span></p>
+                    <p><strong>Wrist:</strong> <span class="state-left-wrist">@Model.RobotState?.LeftArmState.Wrist.GetDescription()</span></p>
+                    <form method="post" asp-page-handler="MoveElbow" asp-route-side="left-arm" class="control-form">
+                        <label class="form-label">Move Elbow:</label>
+                        <div class="btn-group d-flex" role="group">
+                            @foreach (var elbow in Enum.GetValues<ElbowState>())
+                            {
+                                var isActive = Model.RobotState?.LeftArmState.Elbow == elbow;
+                                <button type="submit" name="elbow" value="@elbow"
+                                        class="btn btn-outline-primary @(isActive ? "active" : "") flex-fill"
+                                        data-state="@elbow">@elbow.GetDescription()</button>
+                            }
+                        </div>
+                    </form>
+                    <form method="post" asp-page-handler="MoveWrist" asp-route-side="left-arm" class="control-form mt-3">
+                        <label class="form-label">Move Wrist:</label>
+                        <div class="btn-group d-flex" role="group">
+                            @foreach (var wrist in Enum.GetValues<WristState>())
+                            {
+                                var isActive = Model.RobotState?.LeftArmState.Wrist == wrist;
+                                <button type="submit" name="wrist" value="@wrist"
+                                        class="btn btn-outline-primary @(isActive ? "active" : "") flex-fill"
+                                        data-state="@wrist">@wrist.GetDescription()</button>
+                            }
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-        <button class="refresh-btn" onclick="location.reload()">Refresh State</button>
+
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">Head</div>
+                <div class="card-body">
+                    <p><strong>Rotation:</strong> <span class="state-head-rotation">@Model.RobotState?.Head.Rotation.GetDescription()</span></p>
+                    <p><strong>Tilt:</strong> <span class="state-head-tilt">@Model.RobotState?.Head.Tilt.GetDescription()</span></p>
+                    <form method="post" asp-page-handler="RotateHead" class="control-form">
+                        <label class="form-label">Rotate Head:</label>
+                        <div class="btn-group d-flex" role="group">
+                            @foreach (var rotation in Enum.GetValues<HeadRotation>())
+                            {
+                                var isActive = Model.RobotState?.Head.Rotation == rotation;
+                                <button type="submit" name="rotation" value="@rotation"
+                                        class="btn btn-outline-primary @(isActive ? "active" : "") flex-fill"
+                                        data-state="@rotation">
+                                    @rotation.GetDescription()
+                                </button>
+                            }
+                        </div>
+                    </form>
+                    <form method="post" asp-page-handler="TiltHead" class="control-form mt-3">
+                        <label class="form-label">Tilt Head:</label>
+                        <div class="btn-group d-flex" role="group">
+                            @foreach (var tilt in Enum.GetValues<HeadTilt>())
+                            {
+                                var isActive = Model.RobotState?.Head.Tilt == tilt;
+                                <button type="submit" name="tilt" value="@tilt"
+                                        class="btn btn-outline-primary @(isActive ? "active" : "") flex-fill"
+                                        data-state="@tilt">@tilt.GetDescription()</button>
+                            }
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">Right Arm</div>
+                <div class="card-body">
+                    <p><strong>Elbow:</strong> <span class="state-right-elbow">@Model.RobotState?.RightArmState.Elbow.GetDescription()</span></p>
+                    <p><strong>Wrist:</strong> <span class="state-right-wrist">@Model.RobotState?.RightArmState.Wrist.GetDescription()</span></p>
+                    <form method="post" asp-page-handler="MoveElbow" asp-route-side="right-arm" class="control-form">
+                        <label class="form-label">Move Elbow:</label>
+                        <div class="btn-group d-flex" role="group">
+                            @foreach (var elbow in Enum.GetValues<ElbowState>())
+                            {
+                                var isActive = Model.RobotState?.RightArmState.Elbow == elbow;
+                                <button type="submit" name="elbow" value="@elbow"
+                                        class="btn btn-outline-primary @(isActive ? "active" : "") flex-fill"
+                                        data-state="@elbow">@elbow.GetDescription()</button>
+                            }
+                        </div>
+                    </form>
+                    <form method="post" asp-page-handler="MoveWrist" asp-route-side="right-arm" class="control-form mt-3">
+                        <label class="form-label">Move Wrist:</label>
+                        <div class="btn-group d-flex" role="group">
+                            @foreach (var wrist in Enum.GetValues<WristState>())
+                            {
+                                var isActive = Model.RobotState?.RightArmState.Wrist == wrist;
+                                <button type="submit" name="wrist" value="@wrist"
+                                        class="btn btn-outline-primary @(isActive ? "active" : "") flex-fill"
+                                        data-state="@wrist">@wrist.GetDescription()</button>
+                            }
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Control Forms -->
-    <div class="control-section">
-        <h2>Controls</h2>
-
-        <!-- Head Controls -->
-        <div class="control-group">
-            <h3>Head</h3>
-            <form method="post" asp-page-handler="RotateHead">
-                <label>Rotate Head:</label>
-                <select name="rotation" asp-items="Html.GetEnumSelectList<HeadRotation>()"></select>
-                <button type="submit">Rotate</button>
-            </form>
-            <form method="post" asp-page-handler="TiltHead">
-                <label>Tilt Head:</label>
-                <select name="tilt" asp-items="Html.GetEnumSelectList<HeadTilt>()"></select>
-                <button type="submit">Tilt</button>
-            </form>
-        </div>
-
-        <!-- Left Arm Controls -->
-        <div class="control-group">
-            <h3>Left Arm</h3>
-            <form method="post" asp-page-handler="MoveElbow" asp-route-side="left">
-                <label>Elbow:</label>
-                <select name="elbow" asp-items="Html.GetEnumSelectList<ElbowState>()"></select>
-                <button type="submit">Move</button>
-            </form>
-            <form method="post" asp-page-handler="MoveWrist" asp-route-side="left">
-                <label>Wrist:</label>
-                <select name="wrist" asp-items="Html.GetEnumSelectList<WristState>()"></select>
-                <button type="submit">Move</button>
-            </form>
-        </div>
-
-        <!-- Right Arm Controls -->
-        <div class="control-group">
-            <h3>Right Arm</h3>
-            <form method="post" asp-page-handler="MoveElbow" asp-route-side="right">
-                <label>Elbow:</label>
-                <select name="elbow" asp-items="Html.GetEnumSelectList<ElbowState>()"></select>
-                <button type="submit">Move</button>
-            </form>
-            <form method="post" asp-page-handler="MoveWrist" asp-route-side="right">
-                <label>Wrist:</label>
-                <select name="wrist" asp-items="Html.GetEnumSelectList<WristState>()"></select>
-                <button type="submit">Move</button>
-            </form>
-        </div>
-    </div>
+    <button class="btn btn-secondary refresh-btn mb-4" onclick="location.reload()">Refresh State</button>
 </div>
